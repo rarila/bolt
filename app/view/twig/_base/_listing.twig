@@ -1,14 +1,15 @@
 {# Variables available to custumn listings #}
 {% set listing = {
-    compact:     compact|default(false),
-    content:     content,
-    permissions: permissions|default({
-                    create:    permissions.create|default(false),
-                    edit:      permissions.edit|default(false),
-                    delete:    permissions.delete|default(false),
-                    publish:   permissions.publish|default(false),
-                    depublish: permissions.depublish|default(false),
-                 }),
+    compact:        compact|default(false),
+    content:        content,
+    permissions:    permissions|default({
+                        create:    permissions.create|default(false),
+                        edit:      permissions.edit|default(false),
+                        delete:    permissions.delete|default(false),
+                        publish:   permissions.publish|default(false),
+                        depublish: permissions.depublish|default(false),
+                    }),
+    excerptlength:  excerptlength,
 }%}
 
 {% set modifiable = listing.permissions.create or
