@@ -100,3 +100,39 @@
         {% endif %}
     </td>
 {% endmacro %}
+
+{#
+ # Default listing column: META.
+ #}
+
+{% macro head_meta(listing) %}
+    {% from '@bolt/_buic/_listing.twig' import buic_listing_slink %}
+
+    <th class="username hidden-sm hidden-xs">
+        {{ buic_listing_slink('datecreated', __('Meta'))}}
+    </th>
+{% endmacro %}
+
+{% macro data_meta(listing) %}
+    {% from '@bolt/_buic/_moment.twig' import buic_moment %}
+
+    <td class="username hidden-sm hidden-xs">
+        <i class="fa fa-user fa-fw"></i>
+        {% if listing.content.user.displayname is defined %}
+            {{ listing.content.user.displayname|trimtext(15) }}
+        {% else %}
+            <s>{{ listing.content.values.ownerid|trimtext(15) }}</s>
+        {% endif %}<br>
+        {% if listing.content.status == 'timed' %}
+            <i class="fa fa-clock-o status-timed fa-fw"></i> {{ buic_moment(listing.content.datepublish) }}<br>
+        {% else %}
+            <i class="fa fa-circle status-{{ listing.content.status }} fa-fw"></i> {{ listing.content.datepublish|localdate('%x') }}<br>
+        {% endif %}
+        {% if listing.content.sortorder|default() is not empty %}
+            <i class="fa fa-align-left fa-fw"></i>
+            <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}#taxonomy" >
+                {{ __('Order: %sort%',{'%sort%': listing.content.sortorder}) }}
+            </a>
+        {% endif %}
+    </td>
+{% endmacro %}
