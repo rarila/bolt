@@ -67,7 +67,12 @@
     </tbody>
 {% endmacro %}
 
-{% import '@bolt/_sub/_listing-columns.twig' as column %}
+{% import '@bolt/_sub/_record-listing-select.twig' as column_select %}
+{% import '@bolt/_sub/_record-listing-id.twig' as column_id %}
+{% import '@bolt/_sub/_record-listing-content.twig' as column_content %}
+{% import '@bolt/_sub/_record-listing-thumbnail.twig' as column_thumbnail %}
+{% import '@bolt/_sub/_record-listing-meta.twig' as column_meta %}
+{% import '@bolt/_sub/_record-listing-actions.twig' as column_actions %}
 
 {#
  # GROUPNAME: If we have 'grouping', print the row with the groupname.
@@ -118,26 +123,22 @@
                 {{ block_hcol|raw }}
 
             {% elseif colname == '[X]' %}
-                {{ column.head_select() }}
+                {{ column_select.head() }}
 
             {% elseif colname == 'id' %}
-                {{ column.head_id() }}
+                {{ column_id.head() }}
 
             {% elseif colname == 'content' %}
-                {{ column.head_content(listing, modifiable) }}
+                {{ column_content.head(listing, modifiable) }}
 
             {% elseif colname == 'thumbnail' %}
-                {{ column.head_thumbnail() }}
+                {{ column_thumbnail.head() }}
 
             {% elseif colname == 'meta' %}
-                {{ column.head_meta() }}
+                {{ column_meta.head() }}
 
             {% elseif colname == 'actions' %}
-<<<<<<< Upstream, based on master
-                <th class="hidden-xs">{{ __('Actions') }}</th>
-=======
                 {{ column.head_actions(listing, modifiable) }}
->>>>>>> bc6aeb5 External macro for default column : actions
 
             {% else %}
                 <th><del>{{colname }}</del></th>
@@ -158,22 +159,22 @@
             {{ block_hcol|raw }}
 
         {% elseif colname == '[X]' %}
-            {{ column.data_select() }}
+            {{ column_select.data() }}
 
         {% elseif colname == 'id' %}
-            {{ column.data_id(listing) }}
+            {{ column_id.data(listing) }}
 
         {% elseif colname == 'content' %}
-            {{ column.data_content(listing, modifiable) }}
+            {{ column_content.data(listing, modifiable) }}
 
         {% elseif colname == 'thumbnail' %}
-            {{ column.data_thumbnail(listing) }}
+            {{ column_thumbnail.data(listing) }}
 
         {% elseif colname == 'meta' %}
-            {{ column.data_meta(listing) }}
+            {{ column_meta.data(listing) }}
 
         {% elseif colname == 'actions' %}
-            {{ column.data_actions(listing, modifiable) }}
+            {{ column_actions.data(listing, modifiable) }}
 
         {% else %}
             <td><del>{{colname }}</del></td>

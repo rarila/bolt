@@ -1,0 +1,13 @@
+{#
+ # Default record listing column: ID.
+ #}
+
+{% macro head() %}
+    {% from '@bolt/_buic/_listing.twig' import buic_listing_slink %}
+
+    <th class="hidden-xs">{{ buic_listing_slink('id', __('Id'))}}</th>
+{% endmacro %}
+
+{% macro data(listing) %}
+    <td class="id hidden-xs">№ {{ listing.content.id }}</td>
+{% endmacro %}
