@@ -130,13 +130,13 @@
             {% elseif colname == 'content' %}
                 <th style="width:80%">{{ buic_listing_slink(content.TitleColumnName()|first, __('Title') ~ ' / ' ~ __('Excerpt')) }}</th>
 
+            {% elseif colname == 'thumbnail' %}
+                <th class="listthumb"></th>
+
             {% else %}
                 <th><del>{{colname }}</del></th>
             {% endif %}
         {% endfor %}
-
-        {# COLUMN: Thumbnail #}
-        <th class="listthumb"></th>
 
         {# COLUMN: Meta #}
         <th class="username hidden-sm hidden-xs">{{ buic_listing_slink('datecreated', __('Meta'))}}</th>
@@ -188,29 +188,27 @@
                 </span>
             </td>
 
+        {% elseif colname == 'thumbnail' %}
+            <td class="listthumb">
+                {% if content.getImage is not empty %}
+                    {# Hack to add alt attribute #}
+                    {#{ content.getImage|popup(thumbsize, thumbsize * 0.75, 'c') }#}
+                    {% set thumb_height = (thumbsize * 0.75)|round %}
+                    {% set thumb_small = content.getImage|thumbnail(thumbsize, thumb_height, 'c') %}
+                    {% set thumb_large = content.getImage|thumbnail(1000, 800, 'r') %}
+                    {% set thumb_title = __('Image') ~ ': ' ~ content.getImage %}
+                    <a href="{{ thumb_large }}" class="magnific" title="{{ thumb_title }}">
+                        <img src="{{ thumb_small }}" width="{{ thumbsize }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
+                    </a>
+                {% endif %}
+            </td>
+
         {% else %}
             <td><del>{{colname }}</del></td>
         {% endif %}
     {% endfor %}
 
     {### BLOCK: CONTENT ###}
-    {% block listing_content %}
-        {# COLUMN: Thumbnail #}
-        <td class="listthumb">
-            {% if content.getImage is not empty %}
-                {# Hack to add alt attribute #}
-                {#{ content.getImage|popup(thumbsize, thumbsize * 0.75, 'c') }#}
-                {% set thumb_height = (thumbsize * 0.75)|round %}
-                {% set thumb_small = content.getImage|thumbnail(thumbsize, thumb_height, 'c') %}
-                {% set thumb_large = content.getImage|thumbnail(1000, 800, 'r') %}
-                {% set thumb_title = __('Image') ~ ': ' ~ content.getImage %}
-                <a href="{{ thumb_large }}" class="magnific" title="{{ thumb_title }}">
-                    <img src="{{ thumb_small }}" width="{{ thumbsize }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
-                </a>
-            {% endif %}
-        </td>
-    {% endblock %}
-
     {% if prop.extended %}
         {% block listing_meta %}
             {# COLUMN: Meta #}
