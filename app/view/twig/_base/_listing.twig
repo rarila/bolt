@@ -1,6 +1,7 @@
 {# Variables available to custumn listings #}
 {% set listing = {
     compact:     compact|default(false),
+    content:     content,
     permissions: permissions|default({
                     create:    permissions.create|default(false),
                     edit:      permissions.edit|default(false),
@@ -17,7 +18,7 @@
                     listing.permissions.depublish %}
 
 {% set prop = {
-    has_groupname:  content.group.name is defined,
+    has_groupname:  listing.content.group.name is defined,
     nextgroup:      new_group|default(false),
     unordered:      request('order') == '',
     first:          loop.first,
@@ -82,7 +83,7 @@
             {% if internal.heading|default() %}
                 {{ internal.heading }}
             {% else %}
-                {{ content.group.name|default(__('(no group)')) }}
+                {{ listing.content.group.name|default(__('(no group)')) }}
             {% endif %}
         </th>
     </tr>
@@ -134,7 +135,7 @@
                 <th class="hidden-xs">{{ buic_listing_slink('id', __('Id'))}}</th>
 
             {% elseif colname == 'content' %}
-                <th style="width:80%">{{ buic_listing_slink(content.TitleColumnName()|first, __('Title') ~ ' / ' ~ __('Excerpt')) }}</th>
+                <th style="width:80%">{{ buic_listing_slink(listing.content.TitleColumnName()|first, __('Title') ~ ' / ' ~ __('Excerpt')) }}</th>
 
             {% elseif colname == 'thumbnail' %}
                 <th class="listthumb"></th>
@@ -158,7 +159,7 @@
 {% import '@bolt/_macro/_macro.twig' as macro %}
 {% from '@bolt/_buic/_moment.twig' import buic_moment %}
 
-<tr {% if content.status!='published' %}class="dim"{% endif %}{% if not listing.compact and modifiable %} id="item_{{ content.id }}"{% endif %}>
+<tr {% if listing.content.status != 'published' %}class="dim"{% endif %}{% if not listing.compact and modifiable %} id="item_{{ listing.content.id }}"{% endif %}>
     {% for colname in local_columns %}
         {% set block_hcol = block('listing_dcol_' ~ colname)|default(false) %}
 
@@ -169,16 +170,16 @@
             <td class="check hidden-xs"><input type="checkbox" name="checkRow"></td>
 
         {% elseif colname == 'id' %}
-            <td class="id hidden-xs">№ {{ content.id }}</td>
+            <td class="id hidden-xs">№ {{ listing.content.id }}</td>
 
         {% elseif colname == 'content' %}
             <td class="excerpt {% if not listing.compact %}large{% endif %}">
-                {% set title = content.getTitle(true)|default("<em>(" ~ __("no title …") ~ ")</em>") %}
+                {% set title = listing.content.getTitle(true)|default("<em>(" ~ __("no title …") ~ ")</em>") %}
                 <span>
-                    <strong class="visible-xs">№ {{ content.id }}. </strong>
+                    <strong class="visible-xs">№ {{ listing.content.id }}. </strong>
                     <strong>
                         {% if modifiable %}
-                            <a href="{{ path('editcontent', {'contenttypeslug': content.contenttype.slug, 'id': content.id}) }}" title="Slug: {{ content.slug }}">
+                            <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}" title="Slug: {{ listing.content.slug }}">
                                 {{ title|raw }}
                             </a>
                         {% else %}
@@ -187,19 +188,19 @@
                             </strong>
                          {% endif %}
                     </strong>
-                    {{ content.excerpt(excerptlength - title|length, false, filter|default()) }}
+                    {{ listing.content.excerpt(excerptlength - title|length, false, filter|default()) }}
                 </span>
             </td>
 
         {% elseif colname == 'thumbnail' %}
             <td class="listthumb">
-                {% if content.getImage is not empty %}
+                {% if listing.content.getImage is not empty %}
                     {# Hack to add alt attribute #}
-                    {#{ content.getImage|popup(thumbsize, thumbsize * 0.75, 'c') }#}
+                    {#{ listing.content.getImage|popup(thumbsize, thumbsize * 0.75, 'c') }#}
                     {% set thumb_height = (thumbsize * 0.75)|round %}
-                    {% set thumb_small = content.getImage|thumbnail(thumbsize, thumb_height, 'c') %}
-                    {% set thumb_large = content.getImage|thumbnail(1000, 800, 'r') %}
-                    {% set thumb_title = __('Image') ~ ': ' ~ content.getImage %}
+                    {% set thumb_small = listing.content.getImage|thumbnail(thumbsize, thumb_height, 'c') %}
+                    {% set thumb_large = listing.content.getImage|thumbnail(1000, 800, 'r') %}
+                    {% set thumb_title = __('Image') ~ ': ' ~ listing.content.getImage %}
                     <a href="{{ thumb_large }}" class="magnific" title="{{ thumb_title }}">
                         <img src="{{ thumb_small }}" width="{{ thumbsize }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
                     </a>
@@ -209,21 +210,21 @@
         {% elseif colname == 'meta' %}
             <td class="username hidden-sm hidden-xs">
                 <i class="fa fa-user fa-fw"></i>
-                {% if content.user.displayname is defined %}
-                    {{ content.user.displayname|trimtext(15) }}
+                {% if listing.content.user.displayname is defined %}
+                    {{ listing.content.user.displayname|trimtext(15) }}
                 {% else %}
-                    <s>{{ content.values.ownerid|trimtext(15) }}</s>
+                    <s>{{ listing.content.values.ownerid|trimtext(15) }}</s>
                 {% endif %}<br>
-                {% if content.status == 'timed' %}
-                    <i class="fa fa-clock-o status-timed fa-fw"></i> {{ buic_moment(content.datepublish) }}<br>
+                {% if listing.content.status == 'timed' %}
+                    <i class="fa fa-clock-o status-timed fa-fw"></i> {{ buic_moment(listing.content.datepublish) }}<br>
                 {% else %}
-                    <i class="fa fa-circle status-{{ content.status }} fa-fw"></i> {{ content.datepublish|localdate('%x') }}<br>
+                    <i class="fa fa-circle status-{{ listing.content.status }} fa-fw"></i> {{ listing.content.datepublish|localdate('%x') }}<br>
                 {% endif %}
-                {% if content.sortorder|default() is not empty %}
+                {% if listing.content.sortorder|default() is not empty %}
                     <i class="fa fa-align-left fa-fw"></i>
-                        <a href="{{ path('editcontent', {'contenttypeslug': content.contenttype.slug, 'id': content.id}) }}#taxonomy" >
-                            {{ __('Order: %sort%',{'%sort%': content.sortorder}) }}
-                        </a>
+                    <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}#taxonomy" >
+                        {{ __('Order: %sort%',{'%sort%': listing.content.sortorder}) }}
+                    </a>
                 {% endif %}
             </td>
 
@@ -231,7 +232,7 @@
             <td class="actions hidden-xs">
                 <div class="btn-group">
                     {% if modifiable %}
-                        <a class="btn btn-default btn-xs" href="{{ path('editcontent', {'contenttypeslug': content.contenttype.slug, 'id': content.id}) }}">
+                        <a class="btn btn-default btn-xs" href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}">
                             <i class="fa fa-edit"></i> {{ __('Edit') }}
                         </a>
                     {% endif %}
@@ -240,16 +241,16 @@
                     </button>
 
                     <ul class="dropdown-menu pull-right">
-                        {% if content.status == "published" and content.link is defined %}
+                        {% if listing.content.status == "published" and listing.content.link is defined %}
                             <li>
-                                <a href="{{ content.link }}" target="_blank">
+                                <a href="{{ listing.content.link }}" target="_blank">
                                     <i class="fa fa-external-link-square"></i> {{ __('View on site') }}
                                 </a>
                             </li>
                         {% endif %}
-                        {% if content.relation %}{# i.e. we're viewing this as "related content" on the "edit record" page. #}
+                        {% if listing.content.relation %}{# i.e. we're viewing this as "related content" on the "edit record" page. #}
                             <li>
-                                <a href="{{ path('relatedto', {'contenttypeslug': content.contenttype.slug, 'id': content.id}) }}">
+                                <a href="{{ path('relatedto', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}">
                                     <i class="fa fa-link"></i> {{ __('View related content') }}
                                 </a>
                             </li>
@@ -257,30 +258,30 @@
 
                         {% from _self import actionform %}
                         {% if modifiable %}
-                            {% if content.status != 'published' %}
+                            {% if listing.content.status != 'published' %}
                                 {% if listing.permissions.publish %}
-                                <li>{{ macro.actionform(content, 'publish', 'fa-circle status-published', __('contenttypes.generic.publish',{'%contenttype%':content.contenttype.slug})) }}</li>
+                                <li>{{ macro.actionform(listing.content, 'publish', 'fa-circle status-published', __('contenttypes.generic.publish',{'%contenttype%':listing.content.contenttype.slug})) }}</li>
                                 {% endif %}
                             {% else %}
                                 {% if listing.permissions.depublish %}
-                                <li>{{ macro.actionform(content, 'held', 'fa-circle status-held', __("Change status to 'held'")) }}</li>
-                                <li>{{ macro.actionform(content, 'draft', 'fa-circle status-draft', __("Change status to 'draft'")) }}</li>
+                                <li>{{ macro.actionform(listing.content, 'held', 'fa-circle status-held', __("Change status to 'held'")) }}</li>
+                                <li>{{ macro.actionform(listing.content, 'draft', 'fa-circle status-draft', __("Change status to 'draft'")) }}</li>
 
                                 {% endif %}
                             {% endif %}
                             {% if listing.permissions.create %}
                                 <li>
-                                    <a href="{{ path('editcontent', {'contenttypeslug': content.contenttype.slug, 'id': content.id, 'duplicate': 1}) }}">
-                                        <i class="fa fa-copy"></i> {{ __('contenttypes.generic.duplicate', {'%contenttype%': content.contenttype.slug}) }}
+                                    <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id, 'duplicate': 1}) }}">
+                                        <i class="fa fa-copy"></i> {{ __('contenttypes.generic.duplicate', {'%contenttype%': listing.content.contenttype.slug}) }}
                                     </a>
                                 </li>
                             {% endif %}
                             {% if listing.permissions.delete %}
                                 <li>
-                                    {{ macro.actionform(content, 'delete',
+                                    {{ macro.actionform(listing.content, 'delete',
                                                       'fa-trash',
-                                                      __('contenttypes.generic.delete', {'%contenttype%': content.contenttype.slug}),
-                                                      "Are you sure you want to delete '" ~ content.getTitle ~ "'?" ) }}
+                                                      __('contenttypes.generic.delete', {'%contenttype%': listing.content.contenttype.slug}),
+                                                      "Are you sure you want to delete '" ~ listing.content.getTitle ~ "'?" ) }}
                                 </li>
                             {% endif %}
                             <li class="divider"></li>
@@ -288,37 +289,37 @@
                         <li>
                             <a class="nolink">
                                 {{ __('Author:') }} <strong><i class="fa fa-user"></i>
-                                {% if content.user.displayname is defined %}
-                                    {{ content.user.displayname|trimtext(15) }}
+                                {% if listing.content.user.displayname is defined %}
+                                    {{ listing.content.user.displayname|trimtext(15) }}
                                 {% else %}
-                                    <s>user {{ content.values.ownerid }}</s>
+                                    <s>user {{ listing.content.values.ownerid }}</s>
                                 {% endif %}</strong>
                             </a>
                         </li>
                         <li>
-                            <a class="nolink">{{ __('Current status:') }}<strong>{{ content.status }}</strong></a>
+                            <a class="nolink">{{ __('Current status:') }}<strong>{{ listing.content.status }}</strong></a>
                         </li>
                         <li>
                             <a class="nolink">{{ __('Slug:') }}
-                                <code title="{{ content.slug }}">{{ content.slug|trimtext(24) }}</code>
+                                <code title="{{ listing.content.slug }}">{{ listing.content.slug|trimtext(24) }}</code>
                             </a>
                         </li>
                         <li>
                             <a class="nolink">{{ __('Created on:') }}
-                                <i class="fa fa-asterisk"></i> {{ content.datecreated|date("Y-m-d H:i") }}
+                                <i class="fa fa-asterisk"></i> {{ listing.content.datecreated|date("Y-m-d H:i") }}
                             </a>
                         </li>
                         <li>
                             <a class="nolink">{{ __('Published on:') }}
-                                <i class="fa fa-calendar"></i> {{ content.datepublish|date("Y-m-d H:i") }}
+                                <i class="fa fa-calendar"></i> {{ listing.content.datepublish|date("Y-m-d H:i") }}
                             </a>
                         </li>
                         <li>
                             <a class="nolink">{{ __('Last edited on:') }}
-                                <i class="fa fa-refresh"></i> {{ content.datechanged|date("Y-m-d H:i") }}
+                                <i class="fa fa-refresh"></i> {{ listing.content.datechanged|date("Y-m-d H:i") }}
                             </a>
                         </li>
-                        {% for taxonomyslug, values in content.taxonomy %}
+                        {% for taxonomyslug, values in listing.content.taxonomy %}
                             {% if values|length > 1 %}
                                 <li>
                                     <a class="nolink">{{ config.get('taxonomy')[taxonomyslug].name }}:
