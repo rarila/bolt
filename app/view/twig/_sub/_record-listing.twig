@@ -1,0 +1,20 @@
+{% macro tbody_beg(listing, show_heading, show_header) %}
+    {% set class = [
+        listing.modifiable ? 'sortable' : '',
+        show_heading and show_header ? 'striping_even' : 'striping_odd',
+    ] %}
+
+    <tbody{{ hclass(class)}}>
+{% endmacro %}
+
+{% macro tbody_end(toolbar) %}
+    {% if toolbar %}
+        <tr class="selectiontoolbar hidden">
+            <td colspan="{{ block('listing_columns') }}">
+                <i class="fa fa-fw fa-rotate-270 fa-mail-forward"></i><div class="count">0</div>
+                {{ toolbar }}
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+{% endmacro %}

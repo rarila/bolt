@@ -33,6 +33,7 @@
                       (is_first_row or (listing.content.group.name is defined and nextgroup) and unordered) %}
 
 {# Build columns #}
+
 {% set columns = not listing.compact and listing.modifiable ? ['[X]'] : [] %}
 
 {% for colum in block('listing_columns')|default('Id,Content,Thumbnail,(Meta),Actions')|lower|split(',') %}
@@ -42,31 +43,9 @@
     {% endif %}
 {% endfor %}
 
-{#
- # Macros
- #}
+{# Macros #}
 
-{% macro tbody_beg(listing, show_heading, show_header) %}
-    {% set class = [
-        listing.modifiable ? 'sortable' : '',
-        show_heading and show_header ? 'striping_even' : 'striping_odd',
-    ] %}
-
-    <tbody{{ hclass(class)}}>
-{% endmacro %}
-
-{% macro tbody_end(toolbar) %}
-    {% if toolbar %}
-        <tr class="selectiontoolbar hidden">
-            <td colspan="{{ block('listing_columns') }}">
-                <i class="fa fa-fw fa-rotate-270 fa-mail-forward"></i><div class="count">0</div>
-                {{ toolbar }}
-            </td>
-        </tr>
-    {% endif %}
-    </tbody>
-{% endmacro %}
-
+{% import '@bolt/_sub/_record-listing.twig' as table %}
 {% import '@bolt/_sub/_record-listing-select.twig' as column_select %}
 {% import '@bolt/_sub/_record-listing-id.twig' as column_id %}
 {% import '@bolt/_sub/_record-listing-content.twig' as column_content %}
@@ -77,15 +56,14 @@
 {#
  # GROUPNAME: If we have 'grouping', print the row with the groupname.
  #}
-{% from _self import tbody_beg, tbody_end %}
 
 {% if show_heading or internal.heading|default() %}
 
     {% if not is_first_row %}
-        {{ tbody_end(internal.selection_toolbar|default()) }}
+        {{ table.tbody_end(internal.selection_toolbar|default()) }}
     {% endif %}
 
-    {{ tbody_beg(listing, show_heading, show_header) }}
+    {{ table.tbody_beg(listing, show_heading, show_header) }}
 
     <tr class="heading">
         <th colspan="{{ columns|length }}">
@@ -97,12 +75,13 @@
         </th>
     </tr>
 {% elseif is_first_row %}
-    {{ tbody_beg(listing, show_heading, show_header) }}
+    {{ table.tbody_beg(listing, show_heading, show_header) }}
 {% endif %}
 
 {#
  # HEADER ROW: Print the header for the first row.
  #}
+
 {% if show_header %}
     <tr class="header">
         {% for colname in columns %}
@@ -172,5 +151,5 @@
 </tr>
 
 {% if is_last_row %}
-    {{ tbody_end(internal.selection_toolbar|default()) }}
+    {{ table.tbody_end(internal.selection_toolbar|default()) }}
 {% endif %}
