@@ -19,26 +19,26 @@
                     listing.permissions.publish or
                     listing.permissions.depublish %}
 
-{% set prop = {
-    has_groupname:  listing.content.group.name is defined,
-    nextgroup:      new_group|default(false),
-    unordered:      request('order') == '',
-    first:          loop.first,
-    last:           loop.last|default(loop.first)
-}%}
+{# Local variables #}
 
-{% set local = {
-    row_heading:    not listing.compact and prop.unordered and prop.has_groupname and (prop.first or prop.nextgroup),
-    row_header:     not listing.compact and (prop.first or (prop.has_groupname and prop.nextgroup) and prop.unordered),
-
-} %}
-{% set local_columns = not listing.compact and modifiable ? ['[X]'] : [] %}
+{% set nextgroup    = new_group|default(false) %}
+{% set unordered    = request('order') == '' %}
+{% set is_first_row = loop.first %}
+{% set is_last_row  = loop.last %}
+{% set show_heading = not listing.compact and
+                      unordered and
+                      listing.content.group.name is defined and
+                      (is_first_row or nextgroup) %}
+{% set show_header  = not listing.compact and
+                      (is_first_row or (listing.content.group.name is defined and nextgroup) and unordered) %}
 
 {# Build columns #}
+{% set columns = not listing.compact and listing.modifiable ? ['[X]'] : [] %}
+
 {% for colum in block('listing_columns')|default('Id,Content,Thumbnail,(Meta),Actions')|lower|split(',') %}
     {% set colname = colum|trim('()') %}
     {% if not listing.compact or colum == colname %}
-        {% set local_columns = local_columns|merge([colname]) %}
+        {% set columns = columns|merge([colname]) %}
     {% endif %}
 {% endfor %}
 
@@ -46,10 +46,10 @@
  # Macros
  #}
 
-{% macro tbody_beg(local, modifiable) %}
+{% macro tbody_beg(listing, show_heading, show_header) %}
     {% set class = [
-        modifiable ? 'sortable' : '',
-        local.row_heading and local.row_header ? 'striping_even' : 'striping_odd',
+        listing.modifiable ? 'sortable' : '',
+        show_heading and show_header ? 'striping_even' : 'striping_odd',
     ] %}
 
     <tbody{{ hclass(class)}}>
@@ -79,16 +79,16 @@
  #}
 {% from _self import tbody_beg, tbody_end %}
 
-{% if local.row_heading or internal.heading|default() %}
+{% if show_heading or internal.heading|default() %}
 
-    {% if not prop.first %}
+    {% if not is_first_row %}
         {{ tbody_end(internal.selection_toolbar|default()) }}
     {% endif %}
 
-    {{ tbody_beg(local, modifiable) }}
+    {{ tbody_beg(listing, show_heading, show_header) }}
 
     <tr class="heading">
-        <th colspan="{{ local_columns|length }}">
+        <th colspan="{{ columns|length }}">
             {% if internal.heading|default() %}
                 {{ internal.heading }}
             {% else %}
@@ -96,27 +96,16 @@
             {% endif %}
         </th>
     </tr>
-{% elseif prop.first %}
-    {{ tbody_beg(local, modifiable) }}
+{% elseif is_first_row %}
+    {{ tbody_beg(listing, show_heading, show_header) }}
 {% endif %}
 
 {#
  # HEADER ROW: Print the header for the first row.
  #}
-{% if local.row_header %}
-    {# Deprecated #}
-    {% set params = {} %}
-    {% for key, val in app.request.query.all if key != 'order' %}
-        {% set params = params|merge({(key): val}) %}
-    {% endfor %}
-    {% set link = '?' ~ params|url_encode ~ (params|length ? '&' : '') ~ 'order=' %}
-    {# /Deprecated #}
-
+{% if show_header %}
     <tr class="header">
-        {% from '@bolt/_buic/_listing.twig' import buic_listing_slink %}
-
-        {# Output header columns #}
-        {% for colname in local_columns %}
+        {% for colname in columns %}
             {% set block_hcol = block('listing_hcol_' ~ colname)|default(false) %}
 
             {% if block_hcol is not same as(false) %}
@@ -151,8 +140,8 @@
  # DATA ROW
  #}
 
-<tr {% if listing.content.status != 'published' %}class="dim"{% endif %}{% if not listing.compact and modifiable %} id="item_{{ listing.content.id }}"{% endif %}>
-    {% for colname in local_columns %}
+<tr {% if listing.content.status != 'published' %}class="dim"{% endif %}{% if not listing.compact and listing.modifiable %} id="item_{{ listing.content.id }}"{% endif %}>
+    {% for colname in columns %}
         {% set block_hcol = block('listing_dcol_' ~ colname)|default(false) %}
 
         {% if block_hcol is not same as(false) %}
@@ -182,6 +171,6 @@
     {% endfor %}
 </tr>
 
-{% if prop.last %}
+{% if is_last_row %}
     {{ tbody_end(internal.selection_toolbar|default()) }}
 {% endif %}
