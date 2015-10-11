@@ -121,14 +121,10 @@
                 {{ column.head_select() }}
 
             {% elseif colname == 'id' %}
-<<<<<<< Upstream, based on master
-                <th class="hidden-xs">{{ buic_listing_slink('id', __('Id'))}}</th>
-=======
                 {{ column.head_id() }}
->>>>>>> 3319aae External macro for default column : id
 
             {% elseif colname == 'content' %}
-                <th style="width:80%">{{ buic_listing_slink(listing.content.TitleColumnName()|first, __('Title') ~ ' / ' ~ __('Excerpt')) }}</th>
+                {{ column.head_content(listing) }}
 
             {% elseif colname == 'thumbnail' %}
                 <th class="listthumb"></th>
@@ -167,24 +163,7 @@
             {{ column.data_id(listing) }}
 
         {% elseif colname == 'content' %}
-            <td class="excerpt {% if not listing.compact %}large{% endif %}">
-                {% set title = listing.content.getTitle(true)|default("<em>(" ~ __("no title …") ~ ")</em>") %}
-                <span>
-                    <strong class="visible-xs">№ {{ listing.content.id }}. </strong>
-                    <strong>
-                        {% if modifiable %}
-                            <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}" title="Slug: {{ listing.content.slug }}">
-                                {{ title|raw }}
-                            </a>
-                        {% else %}
-                            <strong>
-                                {{ title|raw }}
-                            </strong>
-                         {% endif %}
-                    </strong>
-                    {{ listing.content.excerpt(excerptlength - title|length, false, filter|default()) }}
-                </span>
-            </td>
+            {{ column.data_content(listing, modifiable) }}
 
         {% elseif colname == 'thumbnail' %}
             <td class="listthumb">

@@ -40,3 +40,38 @@
 {% macro data_id(listing) %}
     <td class="id hidden-xs">№ {{ listing.content.id }}</td>
 {% endmacro %}
+
+{#
+ # Default listing column: CONTENT.
+ #}
+
+{% macro head_content(listing) %}
+    {% from '@bolt/_buic/_listing.twig' import buic_listing_slink %}
+
+    <th style="width:80%">
+        {{ buic_listing_slink(listing.content.TitleColumnName()|first, __('Title') ~ ' / ' ~ __('Excerpt')) }}
+    </th>
+{% endmacro %}
+
+{% macro data_content(listing, modifiable) %}
+    {% set title = listing.content.getTitle(true)|default("<em>(" ~ __("no title …") ~ ")</em>") %}
+
+    <td class="excerpt {% if not listing.compact %}large{% endif %}">
+        <span>
+            <strong class="visible-xs">№ {{ listing.content.id }}. </strong>
+            <strong>
+                {% if modifiable %}
+                    <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}" title="Slug: {{ listing.content.slug }}">
+                        {{ title|raw }}
+                    </a>
+                {% else %}
+                    <strong>
+                        {{ title|raw }}
+                    </strong>
+                 {% endif %}
+            </strong>
+            {{ listing.content.excerpt(excerptlength - title|length, false, filter|default()) }}
+        </span>
+    </td>
+
+{% endmacro %}
