@@ -133,13 +133,13 @@
             {% elseif colname == 'thumbnail' %}
                 <th class="listthumb"></th>
 
+            {% elseif colname == 'meta' %}
+                <th class="username hidden-xs">{{ buic_listing_slink('datecreated', __('Meta'))}}</th>
+
             {% else %}
                 <th><del>{{colname }}</del></th>
             {% endif %}
         {% endfor %}
-
-        {# COLUMN: Meta #}
-        <th class="username hidden-sm hidden-xs">{{ buic_listing_slink('datecreated', __('Meta'))}}</th>
 
         {# COLUMN: Action #}
         <th class="hidden-xs">{{ __('Actions') }}</th>
@@ -203,15 +203,7 @@
                 {% endif %}
             </td>
 
-        {% else %}
-            <td><del>{{colname }}</del></td>
-        {% endif %}
-    {% endfor %}
-
-    {### BLOCK: CONTENT ###}
-    {% if prop.extended %}
-        {% block listing_meta %}
-            {# COLUMN: Meta #}
+        {% elseif colname == 'meta' %}
             <td class="username hidden-sm hidden-xs">
                 <i class="fa fa-user fa-fw"></i>
                 {% if content.user.displayname is defined %}
@@ -231,8 +223,11 @@
                         </a>
                 {% endif %}
             </td>
-        {% endblock %}
-    {% endif %}
+
+        {% else %}
+            <td><del>{{colname }}</del></td>
+        {% endif %}
+    {% endfor %}
 
     {### BLOCK: ACTIONS ###}
     {% block listing_actions %}
