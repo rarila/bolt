@@ -35,7 +35,7 @@
 {% set local_columns = not listing.compact and modifiable ? ['[X]'] : [] %}
 
 {# Build columns #}
-{% for colum in block('listing_definition')|default('Id,Content,Thumbnail,(Meta),Actions')|lower|split(',') %}
+{% for colum in block('listing_columns')|default('Id,Content,Thumbnail,(Meta),Actions')|lower|split(',') %}
     {% set colname = colum|trim('()') %}
     {% if not listing.compact or colum == colname %}
         {% set local_columns = local_columns|merge([colname]) %}
