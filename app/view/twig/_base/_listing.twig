@@ -34,7 +34,7 @@
 
 {# Build columns #}
 
-{% set columns = not listing.compact and listing.modifiable ? ['[X]'] : [] %}
+{% set columns = not listing.compact and listing.modifiable ? ['@select'] : [] %}
 
 {% for colum in block('listing_columns')|default('Id,Content,Thumbnail,(Meta),Actions')|lower|split(',') %}
     {% set colname = colum|trim('() ') %}
@@ -90,7 +90,7 @@
             {% if block_hcol is not same as(false) %}
                 {{ block_hcol|raw }}
 
-            {% elseif colname == '[X]' %}
+            {% elseif colname == '@select' %}
                 {{ column_select.head() }}
 
             {% elseif colname == 'id' %}
@@ -126,7 +126,7 @@
         {% if block_hcol is not same as(false) %}
             {{ block_hcol|raw }}
 
-        {% elseif colname == '[X]' %}
+        {% elseif colname == '@select' %}
             {{ column_select.data() }}
 
         {% elseif colname == 'id' %}
