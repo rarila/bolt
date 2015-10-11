@@ -37,8 +37,8 @@
 {% set columns = not listing.compact and listing.modifiable ? ['[X]'] : [] %}
 
 {% for colum in block('listing_columns')|default('Id,Content,Thumbnail,(Meta),Actions')|lower|split(',') %}
-    {% set colname = colum|trim('()') %}
-    {% if not listing.compact or colum == colname %}
+    {% set colname = colum|trim('() ') %}
+    {% if not listing.compact or colum|trim == colname %}
         {% set columns = columns|merge([colname]) %}
     {% endif %}
 {% endfor %}
