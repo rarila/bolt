@@ -1,12 +1,22 @@
 {# Variables available to custumn listings #}
 {% set listing = {
-    compact: compact|default(false),
+    compact:     compact|default(false),
+    permissions: permissions|default({
+                    create:    permissions.create|default(false),
+                    edit:      permissions.edit|default(false),
+                    delete:    permissions.delete|default(false),
+                    publish:   permissions.publish|default(false),
+                    depublish: permissions.depublish|default(false),
+                 }),
 }%}
 
-{% set modifiable = permissions.create or permissions.edit or permissions.delete or permissions.publish or permissions.depublish %}
+{% set modifiable = listing.permissions.create or
+                    listing.permissions.edit or
+                    listing.permissions.delete or
+                    listing.permissions.publish or
+                    listing.permissions.depublish %}
 
 {% set prop = {
-    extended:       not compact,
     has_groupname:  content.group.name is defined,
     nextgroup:      new_group|default(false),
     unordered:      request('order') == '',
@@ -248,24 +258,24 @@
                         {% from _self import actionform %}
                         {% if modifiable %}
                             {% if content.status != 'published' %}
-                                {% if permissions.publish %}
+                                {% if listing.permissions.publish %}
                                 <li>{{ macro.actionform(content, 'publish', 'fa-circle status-published', __('contenttypes.generic.publish',{'%contenttype%':content.contenttype.slug})) }}</li>
                                 {% endif %}
                             {% else %}
-                                {% if permissions.depublish %}
+                                {% if listing.permissions.depublish %}
                                 <li>{{ macro.actionform(content, 'held', 'fa-circle status-held', __("Change status to 'held'")) }}</li>
                                 <li>{{ macro.actionform(content, 'draft', 'fa-circle status-draft', __("Change status to 'draft'")) }}</li>
 
                                 {% endif %}
                             {% endif %}
-                            {% if permissions.create %}
+                            {% if listing.permissions.create %}
                                 <li>
                                     <a href="{{ path('editcontent', {'contenttypeslug': content.contenttype.slug, 'id': content.id, 'duplicate': 1}) }}">
                                         <i class="fa fa-copy"></i> {{ __('contenttypes.generic.duplicate', {'%contenttype%': content.contenttype.slug}) }}
                                     </a>
                                 </li>
                             {% endif %}
-                            {% if permissions.delete %}
+                            {% if listing.permissions.delete %}
                                 <li>
                                     {{ macro.actionform(content, 'delete',
                                                       'fa-trash',
