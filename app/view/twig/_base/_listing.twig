@@ -118,22 +118,7 @@
                 {{ block_hcol|raw }}
 
             {% elseif colname == '[X]' %}
-                <th class="menu hidden-xs">
-                    <div class="btn-group">
-                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            <span class="caret"></span>
-                        </button>
-                        <ul class="dropdown-menu">
-                            <li class="select-all"><a href="#">{{ __('Select all') }}</a></li>
-                            <li class="hidden select-none"><a href="#">{{ __('Select none') }}</a></li>
-                            <li class="hidden divider" role="separator"></li>
-                            <li class="hidden dropdown-header">{{ __('Selection (#):') }}</li>
-                            <li class="hidden"><a href="#">• {{ __('Delete') }}</a></li>
-                            <li class="hidden disabled"><a href="#">• {{ __('Publish') }}</a></li>
-                            <li class="hidden disabled"><a href="#">• {{ __('Depublish') }}</a></li>
-                        </ul>
-                    </div>
-                </th>
+                {{ column.head_select() }}
 
             {% elseif colname == 'id' %}
 <<<<<<< Upstream, based on master
@@ -176,7 +161,7 @@
             {{ block_hcol|raw }}
 
         {% elseif colname == '[X]' %}
-            <td class="check hidden-xs"><input type="checkbox" name="checkRow"></td>
+            {{ column.data_select() }}
 
         {% elseif colname == 'id' %}
             {{ column.data_id(listing) }}
