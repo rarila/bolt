@@ -1,28 +1,3 @@
-{% import '@bolt/_macro/_macro.twig' as macro %}
-{% from '@bolt/_buic/_moment.twig' import buic_moment %}
-{% from _self import tbody_beg, tbody_end %}
-
-{% macro tbody_beg(local, modifiable) %}
-    {% set class = [
-        modifiable ? 'sortable' : '',
-        local.row_heading and local.row_header ? 'striping_even' : 'striping_odd',
-    ] %}
-
-    <tbody{{ hclass(class)}} data-bolt-widget="buicListingPart">
-{% endmacro %}
-
-{% macro tbody_end(toolbar) %}
-    {% if toolbar %}
-        <tr class="selectiontoolbar hidden">
-            <td colspan="{{ block('listing_columns') }}">
-                <i class="fa fa-fw fa-rotate-270 fa-mail-forward"></i><div class="count">0</div>
-                {{ toolbar }}
-            </td>
-        </tr>
-    {% endif %}
-    </tbody>
-{% endmacro %}
-
 {% set modifiable = permissions.create or permissions.edit or permissions.delete or permissions.publish or permissions.depublish %}
 
 {% set prop = {
@@ -50,9 +25,37 @@
 {% endfor %}
 
 {#
+ # Macros
+ #}
+
+{% macro tbody_beg(local, modifiable) %}
+    {% set class = [
+        modifiable ? 'sortable' : '',
+        local.row_heading and local.row_header ? 'striping_even' : 'striping_odd',
+    ] %}
+
+    <tbody{{ hclass(class)}}>
+{% endmacro %}
+
+{% macro tbody_end(toolbar) %}
+    {% if toolbar %}
+        <tr class="selectiontoolbar hidden">
+            <td colspan="{{ block('listing_columns') }}">
+                <i class="fa fa-fw fa-rotate-270 fa-mail-forward"></i><div class="count">0</div>
+                {{ toolbar }}
+            </td>
+        </tr>
+    {% endif %}
+    </tbody>
+{% endmacro %}
+
+{#
  # GROUPNAME: If we have 'grouping', print the row with the groupname.
  #}
+{% from _self import tbody_beg, tbody_end %}
+
 {% if local.row_heading or internal.heading|default() %}
+
     {% if not prop.first %}
         {{ tbody_end(internal.selection_toolbar|default()) }}
     {% endif %}
@@ -137,6 +140,9 @@
 {#
  # DATA ROW
  #}
+{% import '@bolt/_macro/_macro.twig' as macro %}
+{% from '@bolt/_buic/_moment.twig' import buic_moment %}
+
 <tr {% if content.status!='published' %}class="dim"{% endif %}{% if prop.extended and modifiable %} id="item_{{ content.id }}"{% endif %}>
     {% for colname in local_columns %}
         {% set block_hcol = block('listing_dcol_' ~ colname)|default(false) %}
