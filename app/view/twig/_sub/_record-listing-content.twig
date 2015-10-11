@@ -11,7 +11,7 @@
 {% endmacro %}
 
 {% macro data(listing, modifiable) %}
-    {% set title = listing.content.getTitle|default('<em>(' ~ __('no title …') ~ ')</em>')|raw %}
+    {% set title = listing.content.getTitle(true)|default("<em>(" ~ __("no title …") ~ ")</em>") %}
 
     <td class="excerpt {% if not listing.compact %}large{% endif %}">
         <span>
@@ -19,15 +19,16 @@
             <strong>
                 {% if modifiable %}
                     <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}" title="Slug: {{ listing.content.slug }}">
-                        {{ title }}
+                        {{ title|raw }}
                     </a>
                 {% else %}
                     <strong>
-                        {{ title }}
+                        {{ title|raw }}
                     </strong>
                  {% endif %}
             </strong>
-            {{ listing.content.excerpt(listing.excerptlength - title|length) }}
+            {{ listing.content.excerpt(excerptlength - title|length, false, filter|default()) }}
         </span>
     </td>
+
 {% endmacro %}
