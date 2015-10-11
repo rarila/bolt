@@ -36,8 +36,18 @@
 
 {% set local = {
     row_heading:    prop.extended and prop.unordered and prop.has_groupname and (prop.first or prop.nextgroup),
-    row_header:     prop.extended and (prop.first or (prop.has_groupname and prop.nextgroup) and prop.unordered)
+    row_header:     prop.extended and (prop.first or (prop.has_groupname and prop.nextgroup) and prop.unordered),
+
 } %}
+{% set local_columns = [] %}
+
+{# Build columns #}
+{% for colum in block('listing_definition')|default('Id,Content,(Meta),Thumbnail,Actions')|lower|split(',') %}
+    {% set colname = colum|trim('()') %}
+    {% if prop.extended or colum == colname %}
+        {% set local_columns = local_columns|merge([colname]) %}
+    {% endif %}
+{% endfor %}
 
 {#
  # GROUPNAME: If we have 'grouping', print the row with the groupname.
@@ -108,6 +118,16 @@
                 <th style="margin: 0; padding: 0;"></th>
             {% endif %}
 
+            {# Output header columns #}
+            {% for colname in local_columns %}
+                {% set block_hcol = block('listing_hcol_' ~ colname)|default(false) %}
+                {% if block_hcol is not same as(false) %}
+                    <th>{{ block_hcol }}</th>
+                {% else %}
+                    <th><del>{{colname }}</del></th>
+                {% endif %}
+            {% endfor %}
+
             {# COLUMN: ID #}
             <th class="hidden-xs">{{ buic_listing_slink('id', __('Id'))}}</th>
 
@@ -143,6 +163,16 @@
         {# COLUMN: ID #}
         <td class="id hidden-xs">№ {{ content.id }}</td>
     {% endblock %}
+
+    {# Output data columns #}
+    {% for colname in local_columns %}
+        {% set block_hcol = block('listing_dcol_' ~ colname)|default(false) %}
+        {% if block_hcol is not same as(false) %}
+            <td>{{ block_hcol }}</td>
+        {% else %}
+            <td><del>{{colname }}</del></td>
+        {% endif %}
+    {% endfor %}
 
     {### BLOCK: CONTENT ###}
     {% block listing_content %}
