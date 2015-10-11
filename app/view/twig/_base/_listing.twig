@@ -127,7 +127,7 @@
                 {{ column.head_content(listing) }}
 
             {% elseif colname == 'thumbnail' %}
-                <th class="listthumb"></th>
+                {{ column.head_thumbnail() }}
 
             {% elseif colname == 'meta' %}
                 <th class="username hidden-xs">{{ buic_listing_slink('datecreated', __('Meta'))}}</th>
@@ -166,19 +166,7 @@
             {{ column.data_content(listing, modifiable) }}
 
         {% elseif colname == 'thumbnail' %}
-            <td class="listthumb">
-                {% if listing.content.getImage is not empty %}
-                    {# Hack to add alt attribute #}
-                    {#{ listing.content.getImage|popup(listing.thumbsize, listing.thumbsize * 0.75, 'c') }#}
-                    {% set thumb_height = (listing.thumbsize * 0.75)|round %}
-                    {% set thumb_small = listing.content.getImage|thumbnail(listing.thumbsize, thumb_height, 'c') %}
-                    {% set thumb_large = listing.content.getImage|thumbnail(1000, 800, 'r') %}
-                    {% set thumb_title = __('Image') ~ ': ' ~ listing.content.getImage %}
-                    <a href="{{ thumb_large }}" class="magnific" title="{{ thumb_title }}">
-                        <img src="{{ thumb_small }}" width="{{ listing.thumbsize }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
-                    </a>
-                {% endif %}
-            </td>
+            {{ column.data_thumbnail(listing) }}
 
         {% elseif colname == 'meta' %}
             <td class="username hidden-sm hidden-xs">
