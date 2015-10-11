@@ -1,6 +1,10 @@
 {% extends '@bolt/_base/_listing.twig' %}
 
-{% block listing_columns %}Id,Slug,(Nothing),(Meta),Actions{% endblock %}
+{# Example usage
+
+{% block listing_columns %}
+    Id, Slug, (Nothing), (Meta), Actions
+{% endblock %}
 
 {% block listing_hcol_slug %}
     {% from '@bolt/_macro/_buic-listing.twig' import sortable_link %}
@@ -27,3 +31,5 @@
         This space is for rent!
     </td>
 {% endblock %}
+
+#}
