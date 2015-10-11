@@ -1,3 +1,8 @@
+{# Variables available to custumn listings #}
+{% set listing = {
+    compact: compact|default(false),
+}%}
+
 {% set modifiable = permissions.create or permissions.edit or permissions.delete or permissions.publish or permissions.depublish %}
 
 {% set prop = {
@@ -10,16 +15,16 @@
 }%}
 
 {% set local = {
-    row_heading:    prop.extended and prop.unordered and prop.has_groupname and (prop.first or prop.nextgroup),
-    row_header:     prop.extended and (prop.first or (prop.has_groupname and prop.nextgroup) and prop.unordered),
+    row_heading:    not listing.compact and prop.unordered and prop.has_groupname and (prop.first or prop.nextgroup),
+    row_header:     not listing.compact and (prop.first or (prop.has_groupname and prop.nextgroup) and prop.unordered),
 
 } %}
-{% set local_columns = prop.extended and modifiable ? ['[X]'] : [] %}
+{% set local_columns = not listing.compact and modifiable ? ['[X]'] : [] %}
 
 {# Build columns #}
 {% for colum in block('listing_definition')|default('Id,Content,Thumbnail,(Meta),Actions')|lower|split(',') %}
     {% set colname = colum|trim('()') %}
-    {% if prop.extended or colum == colname %}
+    {% if not listing.compact or colum == colname %}
         {% set local_columns = local_columns|merge([colname]) %}
     {% endif %}
 {% endfor %}
@@ -143,7 +148,7 @@
 {% import '@bolt/_macro/_macro.twig' as macro %}
 {% from '@bolt/_buic/_moment.twig' import buic_moment %}
 
-<tr {% if content.status!='published' %}class="dim"{% endif %}{% if prop.extended and modifiable %} id="item_{{ content.id }}"{% endif %}>
+<tr {% if content.status!='published' %}class="dim"{% endif %}{% if not listing.compact and modifiable %} id="item_{{ content.id }}"{% endif %}>
     {% for colname in local_columns %}
         {% set block_hcol = block('listing_dcol_' ~ colname)|default(false) %}
 
@@ -157,7 +162,7 @@
             <td class="id hidden-xs">№ {{ content.id }}</td>
 
         {% elseif colname == 'content' %}
-            <td class="excerpt {% if prop.extended %}large{% endif %}">
+            <td class="excerpt {% if not listing.compact %}large{% endif %}">
                 {% set title = content.getTitle(true)|default("<em>(" ~ __("no title …") ~ ")</em>") %}
                 <span>
                     <strong class="visible-xs">№ {{ content.id }}. </strong>
