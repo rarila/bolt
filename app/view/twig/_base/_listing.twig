@@ -10,6 +10,7 @@
                         depublish: permissions.depublish|default(false),
                     }),
     excerptlength:  excerptlength,
+    thumbsize:      thumbsize,
 }%}
 
 {% set modifiable = listing.permissions.create or
@@ -197,13 +198,13 @@
             <td class="listthumb">
                 {% if listing.content.getImage is not empty %}
                     {# Hack to add alt attribute #}
-                    {#{ listing.content.getImage|popup(thumbsize, thumbsize * 0.75, 'c') }#}
-                    {% set thumb_height = (thumbsize * 0.75)|round %}
-                    {% set thumb_small = listing.content.getImage|thumbnail(thumbsize, thumb_height, 'c') %}
+                    {#{ listing.content.getImage|popup(listing.thumbsize, listing.thumbsize * 0.75, 'c') }#}
+                    {% set thumb_height = (listing.thumbsize * 0.75)|round %}
+                    {% set thumb_small = listing.content.getImage|thumbnail(listing.thumbsize, thumb_height, 'c') %}
                     {% set thumb_large = listing.content.getImage|thumbnail(1000, 800, 'r') %}
                     {% set thumb_title = __('Image') ~ ': ' ~ listing.content.getImage %}
                     <a href="{{ thumb_large }}" class="magnific" title="{{ thumb_title }}">
-                        <img src="{{ thumb_small }}" width="{{ thumbsize }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
+                        <img src="{{ thumb_small }}" width="{{ listing.thumbsize }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
                     </a>
                 {% endif %}
             </td>
