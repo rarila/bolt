@@ -1,1 +1,29 @@
 {% extends '@bolt/_base/_listing.twig' %}
+
+{% block listing_columns %}Id,Slug,(Nothing),(Meta),Actions{% endblock %}
+
+{% block listing_hcol_slug %}
+    {% from '@bolt/_macro/_buic-listing.twig' import sortable_link %}
+
+    <th>
+        {{ sortable_link('slug', __('Slug')) }}
+    </th>
+{% endblock %}
+
+{% block listing_dcol_slug %}
+    <td style="fill-max">
+        {{ listing.content.contenttype.slug }}
+    </td>
+{% endblock %}
+
+{% block listing_hcol_nothing %}
+    <th>
+        Nothing
+    </th>
+{% endblock %}
+
+{% block listing_dcol_nothing %}
+    <td>
+        This space is for rent!
+    </td>
+{% endblock %}
