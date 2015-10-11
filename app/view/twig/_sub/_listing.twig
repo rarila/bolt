@@ -1,11 +1,21 @@
 {% extends '@bolt/_base/_listing.twig' %}
 
-{# Example usage
+{#
+ # Example usage
+ #}
 
+{# Define used columns, column names in brackets are not shown in compact mode #}
+{# Available default columns are: Id, Content, Thumbnail, Meta and Actions  #}
+
+{#
 {% block listing_columns %}
     Id, Slug, (Nothing), (Meta), Actions
 {% endblock %}
+#}
 
+{# Define column headers (<th>) and data areas (<td>) for your own colums or overwrite the default ones #}
+
+{#
 {% block listing_hcol_slug %}
     {% from '@bolt/_macro/_buic-listing.twig' import sortable_link %}
 
