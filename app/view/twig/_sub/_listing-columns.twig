@@ -136,3 +136,126 @@
         {% endif %}
     </td>
 {% endmacro %}
+
+{#
+ # Default listing column: ACTIONS.
+ #}
+
+{% macro head_actions() %}
+    <th>
+        {{ __('Actions') }}
+    </th>
+{% endmacro %}
+
+{% macro data_actions(listing, modifiable) %}
+    {% import '@bolt/_macro/_macro.twig' as macro %}
+
+    <td class="actions hidden-xs">
+        <div class="btn-group">
+            {% if modifiable %}
+                <a class="btn btn-default btn-xs" href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}">
+                    <i class="fa fa-edit"></i> {{ __('Edit') }}
+                </a>
+            {% endif %}
+            <button type="button" class="btn btn-default dropdown-toggle btn-xs" data-toggle="dropdown">
+                <i class="fa fa-info-sign"></i> <span class="caret"></span>
+            </button>
+
+            <ul class="dropdown-menu pull-right">
+                {% if listing.content.status == "published" and listing.content.link is defined %}
+                    <li>
+                        <a href="{{ listing.content.link }}" target="_blank">
+                            <i class="fa fa-external-link-square"></i> {{ __('View on site') }}
+                        </a>
+                    </li>
+                {% endif %}
+                {% if listing.content.relation %}{# i.e. we're viewing this as "related content" on the "edit record" page. #}
+                    <li>
+                        <a href="{{ path('relatedto', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id}) }}">
+                            <i class="fa fa-link"></i> {{ __('View related content') }}
+                        </a>
+                    </li>
+                {% endif %}
+
+                {% from _self import actionform %}
+                {% if modifiable %}
+                    {% if listing.content.status != 'published' %}
+                        {% if listing.permissions.publish %}
+                        <li>{{ macro.actionform(listing.content, 'publish', 'fa-circle status-published', __('contenttypes.generic.publish',{'%contenttype%':listing.content.contenttype.slug})) }}</li>
+                        {% endif %}
+                    {% else %}
+                        {% if listing.permissions.depublish %}
+                        <li>{{ macro.actionform(listing.content, 'held', 'fa-circle status-held', __("Change status to 'held'")) }}</li>
+                        <li>{{ macro.actionform(listing.content, 'draft', 'fa-circle status-draft', __("Change status to 'draft'")) }}</li>
+
+                        {% endif %}
+                    {% endif %}
+                    {% if listing.permissions.create %}
+                        <li>
+                            <a href="{{ path('editcontent', {'contenttypeslug': listing.content.contenttype.slug, 'id': listing.content.id, 'duplicate': 1}) }}">
+                                <i class="fa fa-copy"></i> {{ __('contenttypes.generic.duplicate', {'%contenttype%': listing.content.contenttype.slug}) }}
+                            </a>
+                        </li>
+                    {% endif %}
+                    {% if listing.permissions.delete %}
+                        <li>
+                            {{ macro.actionform(listing.content, 'delete',
+                                              'fa-trash',
+                                              __('contenttypes.generic.delete', {'%contenttype%': listing.content.contenttype.slug}),
+                                              "Are you sure you want to delete '" ~ listing.content.getTitle ~ "'?" ) }}
+                        </li>
+                    {% endif %}
+                    <li class="divider"></li>
+                {% endif %}
+                <li>
+                    <a class="nolink">
+                        {{ __('Author:') }} <strong><i class="fa fa-user"></i>
+                        {% if listing.content.user.displayname is defined %}
+                            {{ listing.content.user.displayname|trimtext(15) }}
+                        {% else %}
+                            <s>user {{ listing.content.values.ownerid }}</s>
+                        {% endif %}</strong>
+                    </a>
+                </li>
+                <li>
+                    <a class="nolink">{{ __('Current status:') }}<strong>{{ listing.content.status }}</strong></a>
+                </li>
+                <li>
+                    <a class="nolink">{{ __('Slug:') }}
+                        <code title="{{ listing.content.slug }}">{{ listing.content.slug|trimtext(24) }}</code>
+                    </a>
+                </li>
+                <li>
+                    <a class="nolink">{{ __('Created on:') }}
+                        <i class="fa fa-asterisk"></i> {{ listing.content.datecreated|date("Y-m-d H:i") }}
+                    </a>
+                </li>
+                <li>
+                    <a class="nolink">{{ __('Published on:') }}
+                        <i class="fa fa-calendar"></i> {{ listing.content.datepublish|date("Y-m-d H:i") }}
+                    </a>
+                </li>
+                <li>
+                    <a class="nolink">{{ __('Last edited on:') }}
+                        <i class="fa fa-refresh"></i> {{ listing.content.datechanged|date("Y-m-d H:i") }}
+                    </a>
+                </li>
+                {% for taxonomyslug, values in listing.content.taxonomy %}
+                    {% if values|length > 1 %}
+                        <li>
+                            <a class="nolink">{{ config.get('taxonomy')[taxonomyslug].name }}:
+                                <i class="fa fa-tag"></i> {{ values|join(", ")|trimtext(24) }}
+                            </a>
+                        </li>
+                    {% else %}
+                        <li>
+                            <a class="nolink">{{ config.get('taxonomy')[taxonomyslug].singular_name }}:
+                                <i class="fa fa-tag"></i> {{ values|first|trimtext(24) }}
+                            </a>
+                        </li>
+                    {% endif %}
+                {% endfor %}
+            </ul>
+        </div>
+    </td>
+{% endmacro %}
