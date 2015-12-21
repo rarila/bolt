@@ -32,18 +32,19 @@
          * @private
          */
         _create: function () {
-            var bar = $(barTemplate);
+            var self = this,
+                bar = $(barTemplate);
 
             // Attach and detach the progressbar.
-            this.element.parent().append(bar);
+            self.element.parent().append(bar);
 
             // Initialize complexify.
-            this.element.complexify(
+            self.element.complexify(
                 {
-                    banMode: this.options.banMode,
-                    bannedPasswords: this.options.banned,
-                    minimumChars: this.options.minChars,
-                    strengthScaleFactor: this.options.scaleFactor
+                    banMode: self.options.banMode,
+                    bannedPasswords: self.options.banned,
+                    minimumChars: self.options.minChars,
+                    strengthScaleFactor: self.options.scaleFactor
                 }, function (valid, complexity) {
                     bar
                         .toggleClass('progress-bar-danger', complexity < 40)
