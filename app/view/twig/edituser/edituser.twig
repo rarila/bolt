@@ -21,6 +21,7 @@
 {% endblock page_subtitle %}
 
 {% block page_main %}
+    {% from '@bolt/_macro/_macro.twig' import prevent_auto_filling %}
 
     {% form_theme context.form 'form_bolt_layout.twig' %}
 
@@ -37,11 +38,7 @@
             {% endif %}
 
             <form method="post" class="form-horizontal" autocomplete="off">
-                {# Google Chrome requires this trick to prevent password fields from auto-filling.
-                   @see http://stackoverflow.com/questions/15738259/disabling-chrome-autofill #}
-                <input type="text" name="text_fake" id="text_fake" value="" style="display:none;" />
-                <input type="password" name="password_fake" id="password_fake" value="" style="display:none;" />
-
+                {{ prevent_auto_filling() }}
                 {{ form_widget(context.form) }}
 
                 <input type="submit" value="{{ __('page.edit-users.button.save') }}" name="submit" class="btn btn-primary">

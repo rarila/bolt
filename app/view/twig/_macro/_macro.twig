@@ -220,3 +220,14 @@
 
     </div>
 {% endmacro %}
+
+{##
+ # Fields to prevent auto-filling.
+ #
+ # Google Chrome requires this trick to prevent password fields from auto-filling.
+ # @see http://stackoverflow.com/questions/15738259/disabling-chrome-autofill
+ #}
+{% macro prevent_auto_filling() %}
+    <input type="text" name="text_fake" id="text_fake" value="" style="display:none;" />
+    <input type="password" name="password_fake" id="password_fake" value="" style="display:none;" />
+{% endmacro %}
