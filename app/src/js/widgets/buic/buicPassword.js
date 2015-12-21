@@ -40,8 +40,10 @@
             // Initialize complexify.
             this.element.complexify(
                 {
-                    'strengthScaleFactor': 0.6,
-                    'minimumChars': 6
+                    banMode: this.options.banMode,
+                    bannedPasswords: this.options.banned,
+                    minimumChars: this.options.minChars,
+                    strengthScaleFactor: this.options.scaleFactor
                 }, function (valid, complexity) {
                     bar
                         .toggleClass('progress-bar-danger', complexity < 40)
@@ -50,6 +52,21 @@
                         .css({'width': complexity + '%'});
                 }
             );
+        },
+
+        /**
+         * Default options.
+         *
+         * @property {string}   banMode     - "strict" or "loose"
+         * @property {string[]} banned      - A list of passwords that will always return 0% complexity
+         * @property {number}   minChars    - Minimum number of characters that the password must have to be valid
+         * @property {number}   scaleFactor - Scale factor applied to the calculated password strength
+         */
+        options: {
+            banMode: 'strict',
+            banned: [],
+            minChars: 6,
+            scaleFactor: 0.6
         }
     });
 })(jQuery);
