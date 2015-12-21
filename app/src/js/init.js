@@ -336,7 +336,7 @@ var init = {
             }
         });
 
-        $('.login-toogle').bind('click', function () {
+        $('.login-toogle').on('click', function () {
             $(this).closest('form').toggleClass('pwd-reset');
         });
     },
