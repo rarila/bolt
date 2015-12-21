@@ -69,7 +69,7 @@ body.login {
         padding: 0.6em 1.1em;
     }
 
-    .login-remembered {
+    .login-toogle {
         display: block;
         margin-top: 5px;
         padding-left: 0;
@@ -79,6 +79,20 @@ body.login {
         display: block;
         margin-top: 5px;
         float: right;
+    }
+
+    .reset-group {
+        display: none;
+    }
+
+    form.pwd-reset {
+        .login-group, .password-group {
+            display: none;
+        }
+
+        .reset-group {
+            display: block;
+        }
     }
 
     p.first-user {

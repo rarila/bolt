@@ -336,14 +336,8 @@ var init = {
             }
         });
 
-        $('.login-forgot').bind('click', function () {
-            $('.login-group, .password-group').hide();
-            $('.reset-group').show();
-        });
-
-        $('.login-remembered').bind('click', function () {
-            $('.login-group, .password-group').show();
-            $('.reset-group').hide();
+        $('.login-toogle').bind('click', function () {
+            $(this).closest('form').toggleClass('pwd-reset');
         });
     },
 
