@@ -49,7 +49,7 @@
                     bar
                         .toggleClass('progress-bar-danger', complexity < 40)
                         .toggleClass('progress-bar-warning', complexity < 50)
-                        .toggleClass('progress-bar-success', complexity > 50)
+                        .toggleClass('progress-bar-success', complexity >= 50)
                         .css({'width': complexity + '%'});
                 }
             );
