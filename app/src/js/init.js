@@ -322,16 +322,10 @@ var init = {
      * Toggle options for showing / hiding the password input on the logon screen.
      */
     passwordInput: function () {
-        $(".togglepass").on('click', function () {
-            if ($(this).hasClass('show-password')) {
-                $('input[name="password"]').attr('type', 'text');
-                $('.togglepass.show-password').hide();
-                $('.togglepass.hide-password').show();
-            } else {
-                $('input[name="password"]').attr('type', 'password');
-                $('.togglepass.show-password').show();
-                $('.togglepass.hide-password').hide();
-            }
+        $('.togglepass').on('click', function () {
+            var show = $(this).closest('form').toggleClass('pwd-show').hasClass('pwd-show');
+
+            $('input[name="password"]').attr('type', show ? 'text' : 'password');
         });
 
         $('.login-toogle').on('click', function () {

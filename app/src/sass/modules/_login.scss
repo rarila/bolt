@@ -40,10 +40,6 @@ body.login {
         min-width: 280px;
     }
 
-    .togglepass.hide-password {
-        display: none;
-    }
-
     .view-site {
         position: absolute;
         right: 44px;
@@ -91,6 +87,19 @@ body.login {
         }
 
         .reset-group {
+            display: block;
+        }
+    }
+
+    .hide-password {
+       display: none;
+    }
+
+    form.pwd-show {
+        .show-password {
+            display: none;
+        }
+        .hide-password {
             display: block;
         }
     }
