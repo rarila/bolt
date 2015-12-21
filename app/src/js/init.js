@@ -320,8 +320,6 @@ var init = {
 
     /*
      * Toggle options for showing / hiding the password input on the logon screen.
-     *
-     * @returns {undefined}
      */
     passwordInput: function () {
         $(".togglepass").on('click', function () {
