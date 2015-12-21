@@ -13,8 +13,7 @@
      */
     var barTemplate =
         '<div class="progress">' +
-            '<div id="complexity-bar" class="progress-bar progress-bar-success" role="progressbar" style="width:0">' +
-            '</div>' +
+            '<div class="progress-bar" role="progressbar" style="width:0"></div>' +
         '</div>';
 
     /**
@@ -37,6 +36,20 @@
 
             // Attach and detach the progressbar.
             this.element.parent().append(bar);
+
+            // Initialize complexify.
+            this.element.complexify(
+                {
+                    'strengthScaleFactor': 0.6,
+                    'minimumChars': 6
+                }, function (valid, complexity) {
+                    bar
+                        .toggleClass('progress-bar-danger', complexity < 40)
+                        .toggleClass('progress-bar-warning', complexity < 50)
+                        .toggleClass('progress-bar-success', complexity > 50)
+                        .css({'width': complexity + '%'});
+                }
+            );
         }
     });
 })(jQuery);
