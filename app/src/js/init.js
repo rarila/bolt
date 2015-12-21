@@ -322,15 +322,19 @@ var init = {
      * Toggle options for showing / hiding the password input on the logon screen.
      */
     passwordInput: function () {
-        $('.togglepass').on('click', function () {
-            var show = $(this).closest('form').toggleClass('pwd-show').hasClass('pwd-show');
+        var form = $('body.login form');
 
-            $('input[name="password"]').attr('type', show ? 'text' : 'password');
-        });
+        if (form.length) {
+            $('.togglepass').on('click', function () {
+                var show = $(this).closest('form').toggleClass('pwd-show').hasClass('pwd-show');
 
-        $('.login-toogle').on('click', function () {
-            $(this).closest('form').toggleClass('pwd-reset');
-        });
+                $('input[name="password"]').attr('type', show ? 'text' : 'password');
+            });
+
+            $('.login-toogle').on('click', function () {
+                $(this).closest('form').toggleClass('pwd-reset');
+            });
+        }
     },
 
     /*
