@@ -413,6 +413,7 @@ class Users extends BackendBase
                     'label'    => Trans::__('page.edit-users.label.password'),
                     'attr'     => [
                         'placeholder' => Trans::__('page.edit-users.placeholder.password'),
+                        'data-bolt-widget' => 'buicPassword',
                     ],
                 ]
             )
