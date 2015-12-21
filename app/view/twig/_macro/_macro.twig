@@ -228,6 +228,6 @@
  # @see http://stackoverflow.com/questions/15738259/disabling-chrome-autofill
  #}
 {% macro prevent_auto_filling() %}
-    <input type="text" name="text_fake" id="text_fake" style="display:none;">
-    <input type="password" name="password_fake" id="password_fake" style="display:none;">
+    <input type="text" name="text_fake" id="text_fake" class="hidden">
+    <input type="password" name="password_fake" id="password_fake" class="hidden">
 {% endmacro %}
