@@ -324,17 +324,16 @@ var init = {
     passwordInput: function () {
         var form = $('body.login form');
 
-        if (form.length) {
-            $('.togglepass').on('click', function () {
-                var show = $(this).closest('form').toggleClass('pwd-show').hasClass('pwd-show');
+        $('.togglepass', form).on('click', function () {
+            $('input[name="password"]').attr(
+                'type',
+                form.toggleClass('pwd-show').hasClass('pwd-show') ? 'text' : 'password'
+            );
+        });
 
-                $('input[name="password"]').attr('type', show ? 'text' : 'password');
-            });
-
-            $('.login-toogle').on('click', function () {
-                $(this).closest('form').toggleClass('pwd-reset');
-            });
-        }
+        $('.login-toogle', form).on('click', function () {
+            form.toggleClass('pwd-reset');
+        });
     },
 
     /*
