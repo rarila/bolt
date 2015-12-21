@@ -384,6 +384,13 @@ class Users extends BackendBase
      */
     private function getUserForm(Entity\Users $user, $addusername = false)
     {
+        // Password widget configuration.
+        $pwdWidget = [
+            'buicPassword' => [
+                banned => []
+            ],
+        ];
+
         // Start building the form
         $form = $this->createFormBuilder('form', $user);
 
@@ -413,7 +420,7 @@ class Users extends BackendBase
                     'label'    => Trans::__('page.edit-users.label.password'),
                     'attr'     => [
                         'placeholder' => Trans::__('page.edit-users.placeholder.password'),
-                        'data-bolt-widget' => 'buicPassword',
+                        'data-bolt-widget' => json_encode($pwdWidget),
                     ],
                 ]
             )
