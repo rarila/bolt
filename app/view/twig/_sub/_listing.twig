@@ -17,10 +17,10 @@
 
 {#
 {% block listing_hcol_slug %}
-    {% from '@bolt/_macro/_buic-listing.twig' import sortable_link %}
+    {% from '@bolt/_buic/_listing.twig' import buic_listing_slink %}
 
     <th>
-        {{ sortable_link('slug', __('Slug')) }}
+        {{ buic_listing_slink('slug', __('Slug')) }}
     </th>
 {% endblock %}
 
