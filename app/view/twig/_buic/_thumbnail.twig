@@ -2,22 +2,20 @@
  # Renders a image thumbnail.
  #
  # @param string  path
- # @param integer size
+ # @param integer width
+ # @param integer height
  #}
-{% macro buic_thumbnail(path, size) %}
+{% macro buic_thumbnail(path, width, height) %}
     {% if path is not empty %}
-        {# Hack to add alt attribute #}
-        {#{ path|popup(size, size * 0.75, 'c') }#}
-        {% set thumb_height = (size * 0.75)|round %}
-        {% set thumb_small = path|thumbnail(size, thumb_height, 'c') %}
+        {% set thumb_small = path|thumbnail(width, height, 'c') %}
         {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
         {% set thumb_title = __('Image') ~ ': ' ~ path %}
 
         {% set attr = {
             image: {
                 'src':     thumb_small,
-                'width':   size,
-                'height':  thumb_height,
+                'width':   width,
+                'height':  height,
                 'alt':     __('Thumbnail')
             },
             link: {
