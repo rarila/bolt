@@ -1,0 +1,20 @@
+{##
+ # Renders a image thumbnail.
+ #
+ # @param string  path
+ # @param integer size
+ #}
+{% macro buic_thumbnail(path, size) %}
+    {% if path is not empty %}
+        {# Hack to add alt attribute #}
+        {#{ path|popup(size, size * 0.75, 'c') }#}
+        {% set thumb_height = (size * 0.75)|round %}
+        {% set thumb_small = path|thumbnail(size, thumb_height, 'c') %}
+        {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
+        {% set thumb_title = __('Image') ~ ': ' ~ path %}
+
+        <a href="{{ thumb_large }}" class="magnific" title="{{ thumb_title }}">
+            <img src="{{ thumb_small }}" size="{{ size }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
+        </a>
+    {% endif %}
+{% endmacro %}
