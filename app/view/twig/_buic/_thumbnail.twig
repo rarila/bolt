@@ -13,8 +13,20 @@
         {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
         {% set thumb_title = __('Image') ~ ': ' ~ path %}
 
-        <a href="{{ thumb_large }}" class="magnific" title="{{ thumb_title }}">
-            <img src="{{ thumb_small }}" size="{{ size }}" height="{{ thumb_height }}" alt="{{ __('Thumbnail') }}">
-        </a>
+        {% set attr = {
+            image: {
+                'src':     thumb_small,
+                'width':   size,
+                'height':  thumb_height,
+                'alt':     __('Thumbnail')
+            },
+            link: {
+                'class':  'magnific',
+                'ref':    thumb_large,
+                'title':  thumb_title
+            },
+        } %}
+
+        <a{{ hattr(attr.link)}}><img{{ hattr(attr.image)}}></a>
     {% endif %}
 {% endmacro %}
