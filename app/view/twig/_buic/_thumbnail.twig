@@ -9,18 +9,18 @@
     {% if path is not empty %}
         {% set thumb_small = path|thumbnail(width, height, 'r') %}
         {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
-        {% set thumb_title = __('Image') ~ ': ' ~ path %}
 
         {% set attr = {
             container: {
-                'class':  'buic-thumbnail magnific',
-                'href':   thumb_large,
-                'title':  thumb_title,
-                'style':  'width:' ~ width ~ 'px; height:' ~ height ~ 'px;',
+                'class':         'buic-thumbnail info-pop magnific',
+                'data-content':  path,
+                'data-html':     true,
+                'href':          thumb_large,
+                'style':         'width:' ~ width ~ 'px; height:' ~ height ~ 'px;',
             },
             image: {
-                'src':     thumb_small,
-                'alt':     __('Thumbnail'),
+                'src':           thumb_small,
+                'alt':           __('Thumbnail'),
             },
         } %}
 
