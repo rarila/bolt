@@ -7,21 +7,20 @@
  #}
 {% macro buic_thumbnail(path, width, height) %}
     {% if path is not empty %}
-        {% set thumb_small = path|thumbnail(width, height, 'c') %}
+        {% set thumb_small = path|thumbnail(width, height, 'r') %}
         {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
         {% set thumb_title = __('Image') ~ ': ' ~ path %}
 
         {% set attr = {
             image: {
                 'src':     thumb_small,
-                'width':   width,
-                'height':  height,
-                'alt':     __('Thumbnail')
+                'alt':     __('Thumbnail'),
             },
             link: {
-                'class':  'magnific',
+                'class':  'buic-thumbnail magnific',
                 'ref':    thumb_large,
-                'title':  thumb_title
+                'title':  thumb_title,
+                'style':  'width:' ~ width ~ 'px; height:' ~ height ~ 'px;',
             },
         } %}
 
