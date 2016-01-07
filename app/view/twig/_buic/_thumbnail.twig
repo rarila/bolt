@@ -7,20 +7,31 @@
  #}
 {% macro buic_thumbnail(path, width, height) %}
     {% if path is not empty %}
+        {% set info = imageinfo(path) %}
+        {% set filename = path|preg_replace('%^.*/%') %}
+        {% set directory = path|preg_replace('%/*[^/]*$%') ~ '/' %}
+
         {% set thumb_small = path|thumbnail(width, height, 'r') %}
         {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
+
+        {% set info_text = [
+            info.type,
+            info.dimensions.width ~ ' × ' ~ info.dimensions.height,
+            info.channels ~ ' × ' ~ info.bits ~ ' bits',
+        ] %}
 
         {% set attr = {
             container: {
                 'class':         'buic-thumbnail info-pop magnific',
-                'data-content':  path,
+                'data-content':  info_text|join('<br>'),
                 'data-html':     true,
+                'data-title':    directory|e ~ '<br><b>' ~ filename|e ~ '</b>',
                 'href':          thumb_large,
                 'style':         'width:' ~ width ~ 'px; height:' ~ height ~ 'px;',
             },
             image: {
-                'src':           thumb_small,
                 'alt':           __('Thumbnail'),
+                'src':           thumb_small,
             },
         } %}
 
