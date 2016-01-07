@@ -12,18 +12,18 @@
         {% set thumb_title = __('Image') ~ ': ' ~ path %}
 
         {% set attr = {
-            image: {
-                'src':     thumb_small,
-                'alt':     __('Thumbnail'),
-            },
-            link: {
+            container: {
                 'class':  'buic-thumbnail magnific',
                 'ref':    thumb_large,
                 'title':  thumb_title,
                 'style':  'width:' ~ width ~ 'px; height:' ~ height ~ 'px;',
             },
+            image: {
+                'src':     thumb_small,
+                'alt':     __('Thumbnail'),
+            },
         } %}
 
-        <a{{ hattr(attr.link)}}><img{{ hattr(attr.image)}}></a>
+        <a{{ hattr(attr.container)}}><img{{ hattr(attr.image)}}></a>
     {% endif %}
 {% endmacro %}
