@@ -1,12 +1,20 @@
 {##
  # Renders a image thumbnail.
  #
+ # Options:
+ #    vmode     string     'collapse'   Vertical size behavior: 'collapse', 'center' or 'fixed'
+ #
  # @param string  path
  # @param integer width
  # @param integer height
+ # @param array   opt Options defining the component
  #}
-{% macro buic_thumbnail(path, width, height) %}
+{% macro buic_thumbnail(path, width, height, opt) %}
     {% if path is not empty %}
+        {% set conf = {
+            'vmode':       opt.vmode|default('') in ['collapse', 'center', 'fixed'] ? opt.vmode : 'collapse',
+        } %}
+
         {% set info = imageinfo(path) %}
         {% set filename = path|preg_replace('%^.*/%') %}
         {% set directory = path|preg_replace('%/*[^/]*$%') ~ '/' %}
@@ -22,12 +30,12 @@
 
         {% set attr = {
             container: {
-                'class':         'buic-thumbnail info-pop magnific',
+                'class':         'buic-thumbnail info-pop magnific' ~ (conf.vmode == 'center' ? ' vcenter' : ''),
                 'data-content':  info_text|join('<br>'),
                 'data-html':     true,
                 'data-title':    directory|e ~ '<br><b>' ~ filename|e ~ '</b>',
                 'href':          thumb_large,
-                'style':         'width:' ~ width ~ 'px; height:' ~ height ~ 'px;',
+                'style':         'width:' ~ width ~ 'px;' ~ (conf.vmode != 'collapse' ? 'height:' ~ height ~ 'px;' : ''),
             },
             image: {
                 'alt':           __('Thumbnail'),
