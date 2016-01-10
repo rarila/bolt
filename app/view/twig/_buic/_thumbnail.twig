@@ -16,6 +16,8 @@
         } %}
 
         {% set info = imageinfo(path) %}
+        {% set img_width = info.dimensions.width %}
+        {% set img_height = info.dimensions.height %}
         {% set filename = path|preg_replace('%^.*/%') %}
         {% set directory = path|preg_replace('%/*[^/]*$%') ~ '/' %}
 
@@ -24,13 +26,18 @@
 
         {% set info_text = [
             info.type,
-            info.dimensions.width ~ ' × ' ~ info.dimensions.height,
+            img_width ~ ' × ' ~ img_height,
             info.channels ~ ' × ' ~ info.bits ~ ' bits',
         ] %}
 
+        {% set class = 'buic-thumbnail info-pop magnific' ~
+            (conf.vmode == 'center' ? ' vcenter' : '') ~
+            (img_height / img_width < 60 / 80 ? ' wide' : '')
+        %}
+
         {% set attr = {
             container: {
-                'class':         'buic-thumbnail info-pop magnific' ~ (conf.vmode == 'center' ? ' vcenter' : ''),
+                'class':         class,
                 'data-content':  info_text|join('<br>'),
                 'data-html':     true,
                 'data-title':    directory|e ~ '<br><b>' ~ filename|e ~ '</b>',
