@@ -2,38 +2,36 @@
  * BUIC: Thumbnail.
  */
 .buic-thumbnail {
-    display: block;
-    position: relative;
+    $default-width: 96px;
+    $default-height: 72px;
+
+    display: table;
+    width: $default-width;
+    max-width: $default-width;
+    height: $default-height;
+    max-height: $default-height;
+
+    div {
+        display: table-cell;
+        width: inherit;
+        max-width: inherit;
+        height: inherit;
+        max-height: inherit;
+        vertical-align: top;
+        text-align: center;
+    }
+
+    &.vcenter div {
+        vertical-align: middle;
+    }
+
+    &.vcollapse {
+        height: auto !important;
+    }
 
     img {
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
-        height: 100%;
-        width: auto;
-    }
-
-    &.wide {
-        img {
-            width: 100%;
-            height: auto;
-        }
-    }
-
-    &.vcenter img {
-        display: block;
-        position: absolute;
-        margin: 0;
-        top: 50%;
-        left: 50%;
-        margin-right: -50%;
-        transform: translate(-50%, -50%);
-    }
-}
-
-.buic-listing {
-    .buic-thumbnail {
-        width: 80px;
-        height: 60px;
+        display: inline-block;
+        max-width: 100% !important; // Because of .dashboardlisting td.listthumb img {max-width: inherit;}
+        max-height: inherit;
     }
 }
