@@ -12,7 +12,8 @@
 {% macro buic_thumbnail(path, width, height, opt) %}
     {% if path is not empty %}
         {% set conf = {
-            'vmode':       opt.vmode|default('') in ['collapse', 'center', 'fixed'] ? opt.vmode : 'collapse',
+            top:        'top' in opt,
+            vcollapse:  'vcollapse' in opt,
         } %}
 
         {% set info = imageinfo(path) %}
@@ -31,8 +32,8 @@
         ] %}
 
         {% set class = 'buic-thumbnail info-pop magnific' ~
-            (conf.vmode == 'center' ? ' vcenter' : '') ~
-            (conf.vmode == 'collapse' ? ' vcollapse' : '') ~
+            (conf.top ? ' top' : '') ~
+            (conf.vcollapse ? ' vcollapse' : '') ~
             (img_height / img_width < 60 / 80 ? ' wide' : '')
         %}
 
