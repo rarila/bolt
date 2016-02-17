@@ -32,6 +32,7 @@
 
         {% set class = 'buic-thumbnail info-pop magnific' ~
             (conf.vmode == 'center' ? ' vcenter' : '') ~
+            (conf.vmode == 'collapse' ? ' vcollapse' : '') ~
             (img_height / img_width < 60 / 80 ? ' wide' : '')
         %}
 
