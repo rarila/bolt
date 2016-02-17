@@ -14,6 +14,7 @@
         {% set conf = {
             top:        'top' in opt,
             vcollapse:  'vcollapse' in opt,
+            checkered:  'checkered' in opt,
         } %}
 
         {% set info = imageinfo(path) %}
@@ -34,6 +35,7 @@
         {% set class = 'buic-thumbnail info-pop magnific' ~
             (conf.top ? ' top' : '') ~
             (conf.vcollapse ? ' vcollapse' : '') ~
+            (conf.checkered ? ' checkered' : '') ~
             (img_height / img_width < 60 / 80 ? ' wide' : '')
         %}
 
