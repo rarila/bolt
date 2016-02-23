@@ -181,7 +181,52 @@ div.buic-listing {
                 width: 100%;
             }
         }
-    }
+
+        /*
+         * Thumbnails.
+         */
+         .buic-thumbnail {
+            $thumb-aspect: 3 / 4;
+            $thumb-max: (128px / 16px) * 1em;
+            $thumb-min: (48px / 16px) * 1em;
+            $screen-max: (1400px / 16px) * 1em;
+            $screen-min: (400px / 16px) * 1em;
+
+            $thumb-max: 128px;
+            $thumb-min: 48px;
+            $screen-max: 1400px;
+            $screen-min: 400px;
+
+            $mult: ($thumb-max - $thumb-min) / ($screen-max - $screen-min);
+
+            $width: calc(#{$thumb-min - $screen-min * $mult} + #{100 * $mult}vw);
+            $height: calc(#{($thumb-min - $screen-min * $mult) * $thumb-aspect} + #{100 * $thumb-aspect * $mult}vw);
+
+            width: $width;
+            max-width: $width;
+            height: $height;
+            max-height: $height;
+
+            @media screen and (max-width: $screen-min) {
+                background: red;
+                width: $thumb-min;
+                max-width: $thumb-min;
+                height: $thumb-min * $thumb-aspect;
+                max-height: $thumb-min * $thumb-aspect;
+            }
+
+            @media screen and (min-width: $screen-max) {
+                background: red;
+                width: $thumb-max;
+                max-width: $thumb-max;
+                height: $thumb-max * $thumb-aspect;
+                max-height: $thumb-max * $thumb-aspect;
+            }
+
+            // Print out formula to use with srcset/sources.
+            // @debug "(max-width: #{$screen-min}) #{$thumb-min},(min-width: #{$screen-max}) #{$thumb-max},#{$width}";
+        }
+   }
 
     /*
      * Internal Usage, don't use!
