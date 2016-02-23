@@ -24,6 +24,7 @@
         {% set directory = path|preg_replace('%/*[^/]*$%') ~ '/' %}
 
         {% set thumb_small = path|thumbnail(width, height, 'r') %}
+        {% set thumb_small = path|thumbnail(128, 96, 'r') %}
         {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
 
         {% set info_text = [
@@ -35,8 +36,7 @@
         {% set class = 'buic-thumbnail info-pop magnific' ~
             (conf.top ? ' top' : '') ~
             (conf.vcollapse ? ' vcollapse' : '') ~
-            (conf.checkered ? ' checkered' : '') ~
-            (img_height / img_width < 60 / 80 ? ' wide' : '')
+            (conf.checkered ? ' checkered' : '')
         %}
 
         {% set attr = {
@@ -50,6 +50,13 @@
             image: {
                 'alt':           __('Thumbnail'),
                 'src':           thumb_small,
+                'srcset':        path|thumbnail(48, 38, 'r') ~ ' 48w,' ~
+                                 path|thumbnail(64, 48, 'r') ~ ' 64w,' ~
+                                 path|thumbnail(96, 72, 'r') ~ ' 96w,' ~
+                                 path|thumbnail(128, 96, 'r') ~ ' 128w,' ~
+                                 path|thumbnail(192, 144, 'r') ~ ' 192w,' ~
+                                 path|thumbnail(256, 192, 'r') ~ ' 256w',
+                'sizes':         '(max-width:400px) 48px,(min-width:1400px) 128px,calc(16px + 8vw)',
             },
         } %}
 
