@@ -169,8 +169,7 @@
         {# COLUMN: Thumbnail #}
         <td class="listthumb">
             {% from '@bolt/_buic/_thumbnail.twig' import buic_thumbnail %}
-            {% set opt = ['vcollapse', 'checkered'] %}
-            {{ buic_thumbnail(content.getImage, thumbsize, (thumbsize * 0.75)|round, opt) }}
+            {{ buic_thumbnail(content.getImage, thumbsize, (thumbsize * 0.75)|round, ['vcollapse']) }}
         </td>
     {% endblock %}
 
