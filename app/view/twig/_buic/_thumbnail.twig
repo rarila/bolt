@@ -6,10 +6,10 @@
  #
  # @param string  path
  # @param integer width
- # @param integer height
+ # @param string  sizes
  # @param array   opt Options defining the component
  #}
-{% macro buic_thumbnail(path, width, height, opt) %}
+{% macro buic_thumbnail(path, sizes, opt) %}
     {% if path is not empty %}
         {% set conf = {
             top:        'top' in opt,
@@ -22,10 +22,6 @@
         {% set img_height = info.dimensions.height %}
         {% set filename = path|preg_replace('%^.*/%') %}
         {% set directory = path|preg_replace('%/*[^/]*$%') ~ '/' %}
-
-        {% set thumb_small = path|thumbnail(width, height, 'r') %}
-        {% set thumb_small = path|thumbnail(128, 96, 'r') %}
-        {% set thumb_large = path|thumbnail(1000, 800, 'r') %}
 
         {% set info_text = [
             info.type,
@@ -45,18 +41,18 @@
                 'data-content':  info_text|join('<br>'),
                 'data-html':     true,
                 'data-title':    directory|e ~ '<br><b>' ~ filename|e ~ '</b>',
-                'href':          thumb_large,
+                'href':          path|thumbnail(1000, 800, 'r'),
             },
             image: {
                 'alt':           __('Thumbnail'),
-                'src':           thumb_small,
+                'src':           path|thumbnail(128, 96, 'r'),
                 'srcset':        path|thumbnail(48, 38, 'r') ~ ' 48w,' ~
                                  path|thumbnail(64, 48, 'r') ~ ' 64w,' ~
                                  path|thumbnail(96, 72, 'r') ~ ' 96w,' ~
                                  path|thumbnail(128, 96, 'r') ~ ' 128w,' ~
                                  path|thumbnail(192, 144, 'r') ~ ' 192w,' ~
                                  path|thumbnail(256, 192, 'r') ~ ' 256w',
-                'sizes':         '(max-width:400px) 48px,(min-width:1400px) 128px,calc(16px + 8vw)',
+                'sizes':         sizes,
             },
         } %}
 
