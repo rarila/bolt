@@ -18,44 +18,46 @@
         } %}
 
         {% set info = imageinfo(path) %}
-        {% set img_width = info.dimensions.width %}
-        {% set img_height = info.dimensions.height %}
-        {% set filename = path|preg_replace('%^.*/%') %}
-        {% set directory = path|preg_replace('%/*[^/]*$%') ~ '/' %}
+        {% if info.exists %}
+            {% set img_width = info.dimensions.width %}
+            {% set img_height = info.dimensions.height %}
+            {% set filename = path|preg_replace('%^.*/%') %}
+            {% set directory = path|preg_replace('%/*[^/]*$%') ~ '/' %}
 
-        {% set info_text = [
-            info.type,
-            img_width ~ ' × ' ~ img_height,
-            info.channels ~ ' × ' ~ info.bits ~ ' bits',
-        ] %}
+            {% set info_text = [
+                info.type,
+                img_width ~ ' × ' ~ img_height,
+                info.channels ~ ' × ' ~ info.bits ~ ' bits',
+            ] %}
 
-        {% set class = 'buic-thumbnail info-pop magnific' ~
-            (conf.top ? ' top' : '') ~
-            (conf.vcollapse ? ' vcollapse' : '') ~
-            (conf.checkered ? ' checkered' : '')
-        %}
+            {% set class = 'buic-thumbnail info-pop magnific' ~
+                (conf.top ? ' top' : '') ~
+                (conf.vcollapse ? ' vcollapse' : '') ~
+                (conf.checkered ? ' checkered' : '')
+            %}
 
-        {% set attr = {
-            container: {
-                'class':         class,
-                'data-content':  info_text|join('<br>'),
-                'data-html':     true,
-                'data-title':    directory|e ~ '<br><b>' ~ filename|e ~ '</b>',
-                'href':          path|thumbnail(1000, 800, 'r'),
-            },
-            image: {
-                'alt':           __('Thumbnail'),
-                'src':           path|thumbnail(128, 96, 'r'),
-                'srcset':        path|thumbnail(48, 38, 'r') ~ ' 48w,' ~
-                                 path|thumbnail(64, 48, 'r') ~ ' 64w,' ~
-                                 path|thumbnail(96, 72, 'r') ~ ' 96w,' ~
-                                 path|thumbnail(128, 96, 'r') ~ ' 128w,' ~
-                                 path|thumbnail(192, 144, 'r') ~ ' 192w,' ~
-                                 path|thumbnail(256, 192, 'r') ~ ' 256w',
-                'sizes':         sizes,
-            },
-        } %}
+            {% set attr = {
+                container: {
+                    'class':         class,
+                    'data-content':  info_text|join('<br>'),
+                    'data-html':     true,
+                    'data-title':    directory|e ~ '<br><b>' ~ filename|e ~ '</b>',
+                    'href':          path|thumbnail(1000, 800, 'r'),
+                },
+                image: {
+                    'alt':           __('Thumbnail'),
+                    'src':           path|thumbnail(128, 96, 'r'),
+                    'srcset':        path|thumbnail(48, 38, 'r') ~ ' 48w,' ~
+                                     path|thumbnail(64, 48, 'r') ~ ' 64w,' ~
+                                     path|thumbnail(96, 72, 'r') ~ ' 96w,' ~
+                                     path|thumbnail(128, 96, 'r') ~ ' 128w,' ~
+                                     path|thumbnail(192, 144, 'r') ~ ' 192w,' ~
+                                     path|thumbnail(256, 192, 'r') ~ ' 256w',
+                    'sizes':         sizes,
+                },
+            } %}
 
-        <a{{ hattr(attr.container)}}><div><img{{ hattr(attr.image)}}></div></a>
+            <a{{ hattr(attr.container)}}><div><img{{ hattr(attr.image)}}></div></a>
+        {% endif %}
     {% endif %}
 {% endmacro %}
